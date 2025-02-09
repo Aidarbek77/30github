@@ -3,3 +3,4 @@ everyday I will add day by day more plans like issue solving from other web page
 and will add some new knowledge i got about git 
 
 day 2 is to pull request and to understand GIT and other functions 
+;
