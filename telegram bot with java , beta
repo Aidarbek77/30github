@@ -1,1 +1,178 @@
 #Telegram bot Java
+-----------------------------------------------------------------------------------
+#Main.Java> --->
+
+package com.example.bot;
+
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+            botsApi.registerBot(new MyTelegramBot());
+            System.out.println("✅ Bot started successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+---------------------------------------------------------------------------------------
+
+#Botconfig.java> ---> 
+
+package com.example.bot;
+
+public class BotConfig {
+    public static final String BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN";
+}
+-----------------------------------------------------------------------------------------
+
+#MyTelegramBot.java> ---> 
+
+package com.example.bot;
+
+import com.example.bot.handlers.StartHandler;
+import com.example.bot.handlers.OtherMessages;
+import com.example.bot.handlers.SurveyHandler;
+import com.example.bot.handlers.ReviewHandler;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+public class MyTelegramBot extends TelegramLongPollingBot {
+
+    @Override
+    public String getBotToken() {
+        return BotConfig.BOT_TOKEN;
+    }
+
+    @Override
+    public String getBotUsername() {
+        return "YourBotUsername";
+    }
+
+    @Override
+    public void onUpdateReceived(Update update) {
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String userMessage = update.getMessage().getText();
+            Long chatId = update.getMessage().getChatId();
+
+            // Route messages to handlers
+            if (userMessage.equals("/start")) {
+                sendMessage(chatId, StartHandler.handleStart());
+            } else if (userMessage.equals("/оставить_отзыв")) {
+                sendMessage(chatId, ReviewHandler.handleReview());
+            } else if (SurveyHandler.isSurveyCommand(userMessage)) {
+                sendMessage(chatId, SurveyHandler.handleSurvey(userMessage));
+            } else {
+                sendMessage(chatId, OtherMessages.handleOtherMessages(userMessage));
+            }
+        }
+    }
+
+    private void sendMessage(Long chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText(text);
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+-----------------------------------------------------------------------------------
+
+#StartHandler.java> --->
+
+package com.example.bot.handlers;
+
+public class StartHandler {
+    public static String handleStart() {
+        return "Привет! Добро пожаловать в нашего Telegram-бота!";
+    }
+}
+
+------------------------------------------------------------------------------------
+
+#ReviewHandler.java> ---> 
+
+package com.example.bot.handlers;
+
+public class ReviewHandler {
+    public static String handleReview() {
+        return "Спасибо за ваш отзыв! Пожалуйста, напишите его здесь.";
+    }
+}
+
+-------------------------------------------------------------------------------------
+
+#SurveyHandler.java> ---> 
+
+package com.example.bot.handlers;
+
+public class SurveyHandler {
+    public static boolean isSurveyCommand(String message) {
+        return message.startsWith("/survey");
+    }
+
+    public static String handleSurvey(String message) {
+        return "Вы начали опрос. Ответьте на вопросы!";
+    }
+}
+
+-------------------------------------------------------------------------------------
+
+#OtherMessages.java> ---> 
+
+package com.example.bot.handlers;
+
+public class OtherMessages {
+    public static String handleOtherMessages(String message) {
+        return "Я не понимаю этот запрос. Попробуйте команду /help!";
+    }
+}
+
+----------------------------------------------------------------------------------------
+
+#Database.java> ---> 
+
+package com.example.bot;
+
+public class Database {
+    public static void createTables() {
+        System.out.println("🛠️ Database tables created (simulation)");
+    }
+}
+
+-------------------------------------------------------------------------------------------
+
+#Dependencies> ---> 
+
+<dependencies>
+    <dependency>
+        <groupId>org.telegram</groupId>
+        <artifactId>telegrambots</artifactId>
+        <version>6.7.0</version>
+    </dependency>
+</dependencies>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
