@@ -26,7 +26,25 @@ for telegegram bot the sturcture will be look like:
 and installations for :
 first don't forget you have downloaded java : java -version > it should be up to 2023-10-07 update package 
 
-Maven: mvn -version > Apache Maven 3.8.6 > should be downloaded maven > mvn clean install 
-and run by : mvn package
+Maven: mvn -version > Apache Maven 3.8.6 > should be downloaded maven >
+
+Install Dependencies: mvn clean install but before pom.xml should be added 
+
+BotConfig.java needs to set up as for telegram bot token : ---> 
+
+public class BotConfig {
+    public static final String BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN";
+}
+to run ---> 
+mvn package
 java -jar target/MyTelegramBot.jar
+
+
+
+
+
+
+
+
+
 
