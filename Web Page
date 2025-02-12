@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider Demo</title>
+    <style>
+        .slider-container {
+            width: 80%;
+            margin: 20px auto;
+            overflow-x: scroll;
+            white-space: nowrap;
+            padding: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        
+        /* Demo images using colored rectangles */
+        .demo-image {
+            display: inline-block;
+            width: 200px;
+            height: 150px;
+            margin-right: 10px;
+            background-color: #3498db;
+            border-radius: 8px;
+        }
+        
+        .demo-image:nth-child(2n) {
+            background-color: #e74c3c;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Image Slider Demo</h1>
+    
+    <div class="slider-container">
+        <!-- Demo colored rectangles instead of actual images -->
+        <div class="demo-image"></div>
+        <div class="demo-image"></div>
+        <div class="demo-image"></div>
+        <div class="demo-image"></div>
+        <div class="demo-image"></div>
+        <div class="demo-image"></div>
+        <div class="demo-image"></div>
+        <div class="demo-image"></div>
+    </div>
+
+    <div class="controls">
+        <button onclick="scrollLeft()">← Previous</button>
+        <button onclick="scrollRight()">Next →</button>
+    </div>
+
+    <script>
+        function scrollLeft() {
+            document.querySelector('.slider-container').scrollBy({
+                left: -220,
+                behavior: 'smooth'
+            });
+        }
+
+        function scrollRight() {
+            document.querySelector('.slider-container').scrollBy({
+                left: 220,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
 
