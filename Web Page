@@ -3,40 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Slider Demo</title>
+    <title>Image Slider with Functional Buttons</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+        }
+        .search-bar input {
+            padding: 8px;
+            font-size: 14px;
+            width: 200px;
+        }
+        .buttons button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
         .slider-container {
             width: 80%;
             margin: 20px auto;
-            overflow-x: scroll;
+            overflow-x: auto;
             white-space: nowrap;
             padding: 20px 0;
             border: 1px solid #ccc;
             border-radius: 8px;
+            display: flex;
+            scroll-behavior: smooth;
         }
-        
-        /* Demo images using colored rectangles */
         .demo-image {
-            display: inline-block;
             width: 200px;
             height: 150px;
             margin-right: 10px;
             background-color: #3498db;
             border-radius: 8px;
+            display: inline-block;
         }
-        
         .demo-image:nth-child(2n) {
             background-color: #e74c3c;
         }
-        
         .controls {
-            text-align: center;
             margin: 20px;
         }
-        
         button {
             padding: 10px 20px;
-            margin: 0 10px;
             font-size: 16px;
             cursor: pointer;
             background-color: #2ecc71;
@@ -44,17 +66,28 @@
             border: none;
             border-radius: 4px;
         }
-        
         button:hover {
             background-color: #27ae60;
         }
     </style>
 </head>
 <body>
-    <h1 style="text-align: center;">Image Slider Demo</h1>
+    <div class="top-bar">
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search...">
+            <button onclick="performSearch()">Go</button>
+        </div>
+        <div class="buttons">
+            <button onclick="openSection('profile')">Profile</button>
+            <button onclick="openSection('images')">Images</button>
+            <button onclick="openSection('biography')">Biography</button>
+            <button onclick="openSection('works')">Works</button>
+            <button onclick="openSection('history')">History</button>
+        </div>
+    </div>
     
-    <div class="slider-container">
-        <!-- Demo colored rectangles instead of actual images -->
+    <h1>Image Slider</h1>
+    <div class="slider-container" id="slider">
         <div class="demo-image"></div>
         <div class="demo-image"></div>
         <div class="demo-image"></div>
@@ -72,17 +105,26 @@
 
     <script>
         function scrollLeft() {
-            document.querySelector('.slider-container').scrollBy({
+            document.getElementById('slider').scrollBy({
                 left: -220,
                 behavior: 'smooth'
             });
         }
 
         function scrollRight() {
-            document.querySelector('.slider-container').scrollBy({
+            document.getElementById('slider').scrollBy({
                 left: 220,
                 behavior: 'smooth'
             });
+        }
+
+        function performSearch() {
+            let query = document.getElementById('search').value;
+            alert('Searching for: ' + query);
+        }
+
+        function openSection(section) {
+            alert('Opening ' + section + ' section');
         }
     </script>
 </body>
