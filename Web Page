@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Slider with Functional Buttons</title>
+    <title>Biography and Achievements</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            overflow-x: hidden;
+            position: relative;
         }
         .top-bar {
             display: flex;
@@ -32,42 +34,27 @@
             border: none;
             border-radius: 4px;
         }
-        .slider-container {
-            width: 80%;
-            margin: 20px auto;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 20px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+        .page {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 100%;
             display: flex;
-            scroll-behavior: smooth;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background-color: white;
+            transition: left 0.5s ease-in-out;
         }
-        .demo-image {
-            width: 200px;
-            height: 150px;
-            margin-right: 10px;
-            background-color: #3498db;
-            border-radius: 8px;
-            display: inline-block;
+        .active {
+            left: 0;
         }
-        .demo-image:nth-child(2n) {
-            background-color: #e74c3c;
-        }
-        .controls {
-            margin: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #2ecc71;
+        .footer {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #004182;
             color: white;
-            border: none;
-            border-radius: 4px;
-        }
-        button:hover {
-            background-color: #25d16c;
         }
     </style>
 </head>
@@ -78,72 +65,81 @@
             <button onclick="performSearch()">Go</button>
         </div>
         <div class="buttons">
-            <button onclick="openSection('profile')">Profile</button>
-            <button onclick="openSection('images')">Images</button>
-            <button onclick="openSection('biography')">Biography</button>
-            <button onclick="openSection('works')">Works</button>
-            <button onclick="openSection('history')">History</button>
+            <button onclick="showPage('biography')">Biography</button>
+            <button onclick="showPage('awards')">Awards</button>
+            <button onclick="showPage('history')">History</button>
+            <button onclick="showPage('initiatives')">Initiatives</button>
         </div>
     </div>
     
-    <h1>Image Slider</h1>
-    <div class="slider-container" id="slider">
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"></div>
-        <div class="demo-image"font-size></div>
+    <div id="biography" class="page active">
+        <h1>Biography</h1>
+        <p>Detailed story about the person's life, achievements, and contributions.</p>
     </div>
 
-    <div class="controls">
-        <button onclick="scrollLeft()">← Previous</button>
-        <button onclick="scrollRight()">Next →</button>
+    <div id="awards" class="page">
+        <h1>Awards</h1>
+        <div class="award">
+            <img src="award1.jpg" alt="Award 1">
+            <p><strong>Best Innovator 2020</strong></p>
+            <p>Received for outstanding contributions in technology and innovation.</p>
+        </div>
+        <div class="award">
+            <img src="award2.jpg" alt="Award 2">
+            <p><strong>Tech Leader 2022</strong></p>
+            <p>Recognized for leadership in AI research and development.</p>
+        </div>
+    </div>
+    
+    <div id="history" class="page">
+        <h1>History of Life</h1>
+        <div class="history-container">
+            <div class="history-image"></div>
+            <div class="history-image"></div>
+            <div class="history-image"></div>
+            <div class="history-image"></div>
+            <div class="history-image"></div>
+        </div>
+    </div>
+
+    <div id="initiatives" class="page">
+        <h1>Initiatives</h1>
+        <p>Engaging in various initiatives to improve technology and society, including AI ethics, open-source contributions, and educational programs.</p>
+    </div>
+
+    <div class="footer">
+        <p>Contact: example@gmail.com | Phone: +123 456 7890</p>
+        <p>All Rights Reserved &copy; 2025</p>
     </div>
 
     <script>
-        function scrollLeft() {
-            document.getElementById('slider').scrollBy({
-                scrollRight: -220,
-                behavior: 'smooth'
-            });
-        }
-
-        function scrollRight() {
-            document.getElementById('slider').scrollBy({
-                scrollRight: 220,
-                behavior: 'smooth'
-            });
-        }
-
         function performSearch() {
             let query = document.getElementById('search').value;
             alert('Searching for: ' + query);
         }
 
-        function openSection(section) {
-            alert('Opening ' + section + ' section');
+        let currentPage = document.querySelector('.page.active');
+
+        function showPage(pageId) {
+            let newPage = document.getElementById(pageId);
+            if (currentPage === newPage) return;
+
+            let pages = [...document.querySelectorAll('.page')];
+            let currentIndex = pages.indexOf(currentPage);
+            let newIndex = pages.indexOf(newPage);
+            
+            let direction = newIndex > currentIndex ? "100%" : "-100%";
+            
+            currentPage.style.left = direction; // Move old page out
+            newPage.style.left = "0"; // Move new page in
+            newPage.classList.add('active');
+            
+            setTimeout(() => {
+                currentPage.classList.remove('active');
+                currentPage = newPage;
+            }, 500);
         }
     </script>
 </body>
 </html>
+
