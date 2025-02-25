@@ -1,48 +1,57 @@
-#Telegram bot Java
------------------------------------------------------------------------------------
-#Main.Java> --->
-
+// Main.java
 package com.example.bot;
 
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import java.util.logging.Logger;
 
 public class Main {
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new MyTelegramBot());
-            System.out.println("✅ Bot started successfully!");
+            logger.info("✅ Bot started successfully!");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.severe("❌ Failed to start bot: " + e.getMessage());
         }
     }
 }
----------------------------------------------------------------------------------------
 
-#Botconfig.java> ---> 
-
+// BotConfig.java
 package com.example.bot;
+
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
 
 public class BotConfig {
-    public static final String BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN";
+    public static final String BOT_TOKEN;
+    
+    static {
+        Properties properties = new Properties();
+        try (InputStream input = BotConfig.class.getClassLoader().getResourceAsStream("config.properties")) {
+            properties.load(input);
+            BOT_TOKEN = properties.getProperty("BOT_TOKEN");
+        } catch (IOException e) {
+            throw new RuntimeException("❌ Failed to load bot configuration", e);
+        }
+    }
 }
------------------------------------------------------------------------------------------
 
-#MyTelegramBot.java> ---> 
-
+// MyTelegramBot.java
 package com.example.bot;
 
-import com.example.bot.handlers.StartHandler;
-import com.example.bot.handlers.OtherMessages;
-import com.example.bot.handlers.SurveyHandler;
-import com.example.bot.handlers.ReviewHandler;
+import com.example.bot.handlers.*;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import java.util.logging.Logger;
 
 public class MyTelegramBot extends TelegramLongPollingBot {
+    private static final Logger logger = Logger.getLogger(MyTelegramBot.class.getName());
 
     @Override
     public String getBotToken() {
@@ -60,16 +69,23 @@ public class MyTelegramBot extends TelegramLongPollingBot {
             String userMessage = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
-            // Route messages to handlers
-            if (userMessage.equals("/start")) {
-                sendMessage(chatId, StartHandler.handleStart());
-            } else if (userMessage.equals("/оставить_отзыв")) {
-                sendMessage(chatId, ReviewHandler.handleReview());
-            } else if (SurveyHandler.isSurveyCommand(userMessage)) {
-                sendMessage(chatId, SurveyHandler.handleSurvey(userMessage));
-            } else {
-                sendMessage(chatId, OtherMessages.handleOtherMessages(userMessage));
+            String response;
+            switch (userMessage) {
+                case "/start":
+                    response = StartHandler.handleStart();
+                    break;
+                case "/оставить_отзыв":
+                    response = ReviewHandler.handleReview();
+                    break;
+                default:
+                    if (SurveyHandler.isSurveyCommand(userMessage)) {
+                        response = SurveyHandler.handleSurvey(userMessage);
+                    } else {
+                        response = OtherMessages.handleOtherMessages(userMessage);
+                    }
+                    break;
             }
+            sendMessage(chatId, response);
         }
     }
 
@@ -80,99 +96,28 @@ public class MyTelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.severe("❌ Failed to send message: " + e.getMessage());
         }
     }
 }
 
------------------------------------------------------------------------------------
-
-#StartHandler.java> --->
-
-package com.example.bot.handlers;
-
-public class StartHandler {
-    public static String handleStart() {
-        return "Привет! Добро пожаловать в нашего Telegram-бота!";
-    }
-}
-
-------------------------------------------------------------------------------------
-
-#ReviewHandler.java> ---> 
-
-package com.example.bot.handlers;
-
-public class ReviewHandler {
-    public static String handleReview() {
-        return "Спасибо за ваш отзыв! Пожалуйста, напишите его здесь.";
-    }
-}
-
--------------------------------------------------------------------------------------
-
-#SurveyHandler.java> ---> 
-
-package com.example.bot.handlers;
-
-public class SurveyHandler {
-    public static boolean isSurveyCommand(String message) {
-        return message.startsWith("/survey");
-    }
-
-    public static String handleSurvey(String message) {
-        return "Вы начали опрос. Ответьте на вопросы!";
-    }
-}
-
--------------------------------------------------------------------------------------
-
-#OtherMessages.java> ---> 
-
-package com.example.bot.handlers;
-
-public class OtherMessages {
-    public static String handleOtherMessages(String message) {
-        return "Я не понимаю этот запрос. Попробуйте команду /help!";
-    }
-}
-
-----------------------------------------------------------------------------------------
-
-#Database.java> ---> 
-
+// Database.java
 package com.example.bot;
 
+import java.util.logging.Logger;
+
 public class Database {
+    private static final Logger logger = Logger.getLogger(Database.class.getName());
+
+    public static void connect() {
+        logger.info("🔗 Connecting to the database... (simulation)");
+    }
+    
     public static void createTables() {
-        System.out.println("🛠️ Database tables created (simulation)");
+        logger.info("🛠️ Database tables created (simulation)");
     }
 }
 
--------------------------------------------------------------------------------------------
-
-#Dependencies> ---> 
-
-<dependencies>
-    <dependency>
-        <groupId>org.telegram</groupId>
-        <artifactId>telegrambots</artifactId>
-        <version>6.7.0</version>
-    </dependency>
-</dependencies>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// config.properties (new file to be added in the resources folder)
+BOT_TOKEN=YOUR_TELEGRAM_BOT_TOKEN
 
