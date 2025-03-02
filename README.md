@@ -37,8 +37,18 @@ java -jar target/MyTelegramBot.jar
 
 
 
+JWT NEEDS --->
+install dependencies 
+pip install fastapi uvicorn
+python-dotenv pyjwt
 
+create .env and add 
+JWT_SECRET=your-very-strong-secret
 
+Run fastAPI
+uvicorn your_script_name:app --reload
+ 
+and that's it 
 
 
 
