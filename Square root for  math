@@ -1,0 +1,12 @@
+import math
+
+def check_square_root(number):
+    sqrt = math.sqrt(number)
+    if sqrt.is_integer():
+        return f"{number} is a perfect square. Square root: {int(sqrt)}"
+    else:
+        return f"{number} is not a perfect square. Approximate square root: {sqrt:.4f}"
+
+# Example usage:
+num = int(input("Enter a number: "))
+print(check_square_root(num))
