@@ -51,6 +51,33 @@ uvicorn your_script_name:app --reload
 and that's it 
 
 
+_____________________________________________________________________________________________
+Authriting Java
+
+Spring Boot – Web framework for Java.
+Spring Security – Secure authentication & authorization.
+Spring Data JPA – ORM for database interactions.
+H2 / PostgreSQL – Database (H2 for testing, PostgreSQL for production).
+BCrypt – Secure password hashing.
+
+
+/src/main/java/com/example/demo/
+├── DemoApplication.java        # Main application
+├── controller/
+│   ├── AuthController.java     # Handles login, register, logout
+│   ├── DashboardController.java# Handles dashboard
+├── model/
+│   ├── User.java               # User entity
+├── repository/
+│   ├── UserRepository.java     # User database operations
+├── security/
+│   ├── SecurityConfig.java     # Security settings
+│   ├── CustomUserDetails.java  # UserDetails implementation
+│   ├── CustomUserDetailsService.java # Loads user details
+└── service/
+    ├── UserService.java        # Business logic for users
+ 
+
 
 
 
